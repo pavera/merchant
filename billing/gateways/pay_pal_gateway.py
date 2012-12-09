@@ -5,7 +5,7 @@ from paypal.pro.exceptions import PayPalFailure
 
 from django.conf import settings
 
-from billing import Gateway
+from billing import Gateway, GatewayNotConfigured
 from billing.utils.credit_card import Visa, MasterCard, AmericanExpress, Discover
 from billing.signals import *
 
