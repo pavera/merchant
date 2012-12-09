@@ -17,12 +17,13 @@ class SamuraiGateway(Gateway):
     homepage_url = "https://samurai.feefighters.com/"
     display_name = "Samurai"
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         merchant_settings = getattr(settings, "MERCHANT_SETTINGS")
-        if not merchant_settings or not merchant_settings.get("samurai"):
+        gw_settings = kwargs.pop('settings', None)
+        if not merchant_settings or not (merchant_settings.get("samurai") or gw_settings):
             raise GatewayNotConfigured("The '%s' gateway is not correctly "
                                        "configured." % self.display_name)
-        samurai_settings = merchant_settings["samurai"]
+        samurai_settings = gw_settings or merchant_settings["samurai"]
         samurai_config.merchant_key = samurai_settings['MERCHANT_KEY']
         samurai_config.merchant_password = samurai_settings['MERCHANT_PASSWORD']
         samurai_config.processor_token = samurai_settings['PROCESSOR_TOKEN']

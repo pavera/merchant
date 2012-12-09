@@ -17,12 +17,13 @@ class PayPalGateway(Gateway):
     homepage_url = "https://merchant.paypal.com/us/cgi-bin/?&cmd=_render-content&content_ID=merchant/wp_pro"
     display_name = "PayPal Website Payments Pro"
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         merchant_settings = getattr(settings, "MERCHANT_SETTINGS")
-        if not merchant_settings or not merchant_settings.get("pay_pal"):
+        gw_settings = kwargs.pop('settings', None)
+        if not merchant_settings or not (merchant_settings.get("pay_pal") or gw_settings):
             raise GatewayNotConfigured("The '%s' gateway is not correctly "
                                        "configured." % self.display_name)
-        pay_pal_settings = merchant_settings["pay_pal"]
+        pay_pal_settings = gw_settings or merchant_settings["pay_pal"]
 
     @property
     def service_url(self):

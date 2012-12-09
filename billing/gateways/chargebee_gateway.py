@@ -10,13 +10,14 @@ class ChargebeeGateway(Gateway):
     display_name = "Chargebee"
     homepage_url = "https://chargebee.com/"
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         test_mode = getattr(settings, "MERCHANT_TEST_MODE", True)
         merchant_settings = getattr(settings, "MERCHANT_SETTINGS")
-        if not merchant_settings or not merchant_settings.get("chargebee"):
+        gw_settings = kwargs.pop('settings', None)
+        if not merchant_settings or not (merchant_settings.get("chargebee") or gw_settings):
             raise GatewayNotConfigured("The '%s' gateway is not correctly "
                                        "configured." % self.display_name)
-        chargebee_settings = merchant_settings["chargebee"]
+        chargebee_settings = gw_settings or merchant_settings["chargebee"]
         self.chargebee_api_key = chargebee_settings["API_KEY"]
         chargebee_site = chargebee_settings["SITE"]
         self.chargebee_api_base_url = "https://%s.chargebee.com/api/v1" % chargebee_site

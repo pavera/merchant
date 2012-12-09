@@ -13,15 +13,16 @@ class WePayGateway(Gateway):
     supported_countries = ["US"]
     supported_cardtypes = [Visa, MasterCard]
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         merchant_settings = getattr(settings, "MERCHANT_SETTINGS")
-        if not merchant_settings or not merchant_settings.get("we_pay"):
+        gw_settings = kwargs.pop('settings', None)
+        if not merchant_settings or not (merchant_settings.get("we_pay") or gw_settings):
             raise GatewayNotConfigured("The '%s' gateway is not correctly "
                                        "configured." % self.display_name)
         super(WePayGateway, self).__init__()
         production = not self.test_mode
         self.we_pay = WePay(production)
-        self.we_pay_settings = merchant_settings["we_pay"]
+        self.we_pay_settings = gw_settings or merchant_settings["we_pay"]
 
     def purchase(self, money, credit_card, options=None):
         options = options or {}
