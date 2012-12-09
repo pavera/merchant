@@ -8,7 +8,7 @@ tmp
 #*#
 example/tmp
 example/localsettings.py
-
+.idea
 docs/_build/*
 
 *_flymake.py*

@@ -72,12 +72,13 @@ class AuthorizeNetGateway(Gateway):
     homepage_url = "http://www.authorize.net/"
     display_name = "Authorize.Net"
 
-    def __init__(self):
+    def __init__(self, settings=None):
         merchant_settings = getattr(settings, "MERCHANT_SETTINGS")
-        if not merchant_settings or not merchant_settings.get("authorize_net"):
+        if not merchant_settings or not merchant_settings.get("authorize_net") or not settings:
             raise GatewayNotConfigured("The '%s' gateway is not correctly "
                                        "configured." % self.display_name)
-        authorize_net_settings = merchant_settings["authorize_net"]
+
+        authorize_net_settings = settings or merchant_settings["authorize_net"]
         self.login = authorize_net_settings["LOGIN_ID"]
         self.password = authorize_net_settings["TRANSACTION_KEY"]
 
