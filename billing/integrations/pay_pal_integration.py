@@ -10,7 +10,7 @@ from paypal.standard.forms import PayPalPaymentsForm, PayPalEncryptedPaymentsFor
 class PayPalIntegration(Integration):
     display_name = "PayPal IPN"
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         merchant_settings = getattr(settings, "MERCHANT_SETTINGS")
         if not merchant_settings or not merchant_settings.get("pay_pal"):
             raise IntegrationNotConfigured("The '%s' integration is not correctly "

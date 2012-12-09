@@ -82,7 +82,7 @@ class EwayAuIntegration(Integration):
     service_url = "https://au.ewaygateway.com/mh/payment"
     urls = ()
 
-    def __init__(self, access_code=None):
+    def __init__(self, access_code=None, *args, **kwargs):
         super(EwayAuIntegration, self).__init__()
         merchant_settings = getattr(settings, "MERCHANT_SETTINGS")
         if not merchant_settings or not merchant_settings.get("eway"):

@@ -7,7 +7,7 @@ from billing.forms.stripe_forms import StripeForm
 class StripeIntegration(Integration):
     display_name = "Stripe"
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         super(StripeIntegration, self).__init__()
         merchant_settings = getattr(settings, "MERCHANT_SETTINGS")
         if not merchant_settings or not merchant_settings.get("stripe"):

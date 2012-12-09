@@ -27,7 +27,7 @@ class WorldPayIntegration(Integration):
     """
     display_name = "RBS World Pay"
 
-    def __init__(self, options=None):
+    def __init__(self, options=None, *args, **kwargs):
         if not options:
             options = {}
         super(WorldPayIntegration, self).__init__(options=options)

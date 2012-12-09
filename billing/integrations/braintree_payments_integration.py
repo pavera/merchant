@@ -14,7 +14,7 @@ from django.template import RequestContext
 class BraintreePaymentsIntegration(Integration):
     display_name = "Braintree Transparent Redirect"
 
-    def __init__(self, options=None):
+    def __init__(self, options=None, *args, **kwargs):
         if not options:
             options = {}
         super(BraintreePaymentsIntegration, self).__init__(options=options)

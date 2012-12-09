@@ -25,7 +25,7 @@ require_POST_m = method_decorator(require_POST)
 class GoogleCheckoutIntegration(Integration):
     display_name = 'Google Checkout'
 
-    def __init__(self, options=None):
+    def __init__(self, options=None, *args, **kwargs):
         if not options:
             options = {}
         super(GoogleCheckoutIntegration, self).__init__(options=options)
