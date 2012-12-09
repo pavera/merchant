@@ -4,7 +4,7 @@ from django.conf import settings
 
 
 class WPHostedPaymentForm(forms.Form):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, md5_secret_key=None, *args, **kwargs):
         super(WPHostedPaymentForm, self).__init__(*args, **kwargs)
         if self.initial:
             self.initial["signatureFields"] = self.initial.get("signatureFields") or "instId:amount:cartId"
@@ -14,7 +14,7 @@ class WPHostedPaymentForm(forms.Form):
                 hash_str += "%s" % self.initial[field]
                 if not signature_fields.index(field) == len(signature_fields) - 1:
                     hash_str += ":"
-            md5_hash = md5("%s:%s" % (settings.MERCHANT_SETTINGS["world_pay"]["MD5_SECRET_KEY"],
+            md5_hash = md5("%s:%s" % (md5_secret_key or settings.MERCHANT_SETTINGS["world_pay"]["MD5_SECRET_KEY"],
                                      hash_str)).hexdigest()
             self.initial["signature"] = self.initial.get("signature") or md5_hash
 

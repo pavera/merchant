@@ -50,7 +50,7 @@ class WorldPayIntegration(Integration):
         return WPHostedPaymentForm
 
     def generate_form(self):
-        return self.form_class()(initial=self.fields)
+        return self.form_class()(md5_secret_key=self.fields.pop('md5_secret_key'), initial=self.fields)
 
     @csrf_exempt_m
     @require_POST_m
