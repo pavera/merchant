@@ -13,13 +13,12 @@ class StripeGateway(Gateway):
     homepage_url = "https://stripe.com/"
     display_name = "Stripe"
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, options=None, *args, **kwargs):
         merchant_settings = getattr(settings, "MERCHANT_SETTINGS")
-        gw_settings = kwargs.pop('settings', None)
-        if not merchant_settings or not (merchant_settings.get("stripe") or gw_settings):
+        if not merchant_settings or not (merchant_settings.get("stripe") or options):
             raise GatewayNotConfigured("The '%s' gateway is not correctly "
                                        "configured." % self.display_name)
-        stripe_settings = gw_settings or merchant_settings["stripe"]
+        stripe_settings = options or merchant_settings["stripe"]
         stripe.api_key = stripe_settings['API_KEY']
         self.stripe = stripe
 

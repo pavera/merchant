@@ -14,18 +14,17 @@ class BraintreePaymentsGateway(Gateway):
     homepage_url = "http://www.braintreepayments.com/"
     display_name = "Braintree Payments"
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, options=None, *args, **kwargs):
         test_mode = getattr(settings, "MERCHANT_TEST_MODE", True)
         if test_mode:
             env = braintree.Environment.Sandbox
         else:
             env = braintree.Environment.Production
         merchant_settings = getattr(settings, "MERCHANT_SETTINGS")
-        gw_settings = kwargs.pop('settings', None)
-        if not merchant_settings or not (merchant_settings.get("braintree_payments") or gw_settings):
+        if not merchant_settings or not (merchant_settings.get("braintree_payments") or options):
             raise GatewayNotConfigured("The '%s' gateway is not correctly "
                                        "configured." % self.display_name)
-        braintree_settings = gw_settings or merchant_settings['braintree_payments']
+        braintree_settings = options or merchant_settings['braintree_payments']
         braintree.Configuration.configure(
             env,
             braintree_settings['MERCHANT_ACCOUNT_ID'],

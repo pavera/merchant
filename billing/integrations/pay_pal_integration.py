@@ -10,12 +10,12 @@ from paypal.standard.forms import PayPalPaymentsForm, PayPalEncryptedPaymentsFor
 class PayPalIntegration(Integration):
     display_name = "PayPal IPN"
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, options=None, *args, **kwargs):
         merchant_settings = getattr(settings, "MERCHANT_SETTINGS")
-        if not merchant_settings or not merchant_settings.get("pay_pal"):
+        if not merchant_settings or not (merchant_settings.get("pay_pal") or options):
             raise IntegrationNotConfigured("The '%s' integration is not correctly "
                                        "configured." % self.display_name)
-        pay_pal_settings = merchant_settings["pay_pal"]
+        pay_pal_settings = options or merchant_settings["pay_pal"]
         # Required Fields. Just a template for the user
         self.fields = {"business": pay_pal_settings['RECEIVER_EMAIL'],
                        "item_name": "",

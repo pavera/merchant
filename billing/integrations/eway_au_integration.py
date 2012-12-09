@@ -82,13 +82,13 @@ class EwayAuIntegration(Integration):
     service_url = "https://au.ewaygateway.com/mh/payment"
     urls = ()
 
-    def __init__(self, access_code=None, *args, **kwargs):
+    def __init__(self, access_code=None, options=None, *args, **kwargs):
         super(EwayAuIntegration, self).__init__()
         merchant_settings = getattr(settings, "MERCHANT_SETTINGS")
-        if not merchant_settings or not merchant_settings.get("eway"):
+        if not merchant_settings or not (merchant_settings.get("eway") or options):
             raise IntegrationNotConfigured("The '%s' integration is not correctly "
                                            "configured." % self.display_name)
-        eway_settings = merchant_settings["eway"]
+        eway_settings = options or merchant_settings["eway"]
         self.customer_id = eway_settings["CUSTOMER_ID"]
         self.username = eway_settings["USERNAME"]
         self.password = eway_settings["PASSWORD"]

@@ -8,13 +8,13 @@ from billing.forms.samurai_forms import SamuraiForm
 class SamuraiIntegration(Integration):
     display_name = "Samurai"
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, options=None, *args, **kwargs):
         super(SamuraiIntegration, self).__init__()
         merchant_settings = getattr(settings, "MERCHANT_SETTINGS")
-        if not merchant_settings or not merchant_settings.get("samurai"):
+        if not merchant_settings or not (merchant_settings.get("samurai") or options):
             raise IntegrationNotConfigured("The '%s' integration is not correctly "
                                        "configured." % self.display_name)
-        samurai_settings = merchant_settings["samurai"]
+        samurai_settings = options or merchant_settings["samurai"]
         self.merchant_key = samurai_settings['MERCHANT_KEY']
         self.gateway = get_gateway("samurai")
 

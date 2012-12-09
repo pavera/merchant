@@ -25,13 +25,12 @@ class PaylaneGateway(Gateway):
     homepage_url = 'http://www.paylane.com/'
     display_name = 'Paylane'
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, options=None, *args, **kwargs):
         merchant_settings = getattr(settings, "MERCHANT_SETTINGS")
-        gw_settings = kwargs.pop('settings', None)
-        if not merchant_settings or not (merchant_settings.get("paylane") or gw_settings):
+        if not merchant_settings or not (merchant_settings.get("paylane") or options):
             raise GatewayNotConfigured("The '%s' gateway is not correctly "
                                        "configured." % self.display_name)
-        paylane_settings = gw_settings or merchant_settings["paylane"]
+        paylane_settings = options or merchant_settings["paylane"]
         wsdl = paylane_settings.get('WSDL', 'https://direct.paylane.com/wsdl/production/Direct.wsdl')
         wsdl_cache = paylane_settings.get('SUDS_CACHE_DIR', '/tmp/suds')
         username = paylane_settings.get('USERNAME', '')

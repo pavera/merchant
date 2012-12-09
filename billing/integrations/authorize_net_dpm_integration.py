@@ -21,13 +21,13 @@ require_POST_m = method_decorator(require_POST)
 class AuthorizeNetDpmIntegration(Integration):
     display_name = "Authorize.Net Direct Post Method"
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, options=None, *args, **kwargs):
         super(AuthorizeNetDpmIntegration, self).__init__()
         merchant_settings = getattr(settings, "MERCHANT_SETTINGS")
-        if not merchant_settings or not merchant_settings.get("authorize_net"):
+        if not merchant_settings or not (merchant_settings.get("authorize_net") or options):
             raise IntegrationNotConfigured("The '%s' integration is not correctly "
                                            "configured." % self.display_name)
-        self.authorize_net_settings = merchant_settings["authorize_net"]
+        self.authorize_net_settings = options or merchant_settings["authorize_net"]
 
     def form_class(self):
         return AuthorizeNetDPMForm

@@ -50,13 +50,12 @@ class BeanstreamGateway(Gateway):
         ("SecireCAVV", True), # 40 a/n characters Include the cardholder authentication verification value as issued by the bank.
     ]
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, options=None, *args, **kwargs):
         merchant_settings = getattr(settings, "MERCHANT_SETTINGS")
-        gw_settings = kwargs.pop('settings', None)
-        if not merchant_settings or not (merchant_settings.get("beanstream") or gw_settings):
+        if not merchant_settings or not (merchant_settings.get("beanstream") or options):
             raise GatewayNotConfigured("The '%s' gateway is not correctly "
                                        "configured." % self.display_name)
-        beanstream_settings = gw_settings or merchant_settings["beanstream"]
+        beanstream_settings = options or merchant_settings["beanstream"]
 
         self.supported_cardtypes = [Visa, MasterCard, AmericanExpress, Discover]
 

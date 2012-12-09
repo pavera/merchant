@@ -7,13 +7,13 @@ from billing.forms.stripe_forms import StripeForm
 class StripeIntegration(Integration):
     display_name = "Stripe"
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, options=None, *args, **kwargs):
         super(StripeIntegration, self).__init__()
         merchant_settings = getattr(settings, "MERCHANT_SETTINGS")
-        if not merchant_settings or not merchant_settings.get("stripe"):
+        if not merchant_settings or not (merchant_settings.get("stripe") or options):
             raise IntegrationNotConfigured("The '%s' integration is not correctly "
                                        "configured." % self.display_name)
-        stripe_settings = merchant_settings["stripe"]
+        stripe_settings = options or merchant_settings["stripe"]
         self.gateway = get_gateway("stripe")
         self.publishable_key = stripe_settings['PUBLISHABLE_KEY']
 

@@ -30,10 +30,10 @@ class GoogleCheckoutIntegration(Integration):
             options = {}
         super(GoogleCheckoutIntegration, self).__init__(options=options)
         merchant_settings = getattr(settings, "MERCHANT_SETTINGS")
-        if not merchant_settings or not merchant_settings.get("google_checkout"):
+        if not merchant_settings or not (merchant_settings.get("google_checkout") or options):
             raise IntegrationNotConfigured("The '%s' integration is not correctly "
                                        "configured." % self.display_name)
-        google_checkout_settings = merchant_settings["google_checkout"]
+        google_checkout_settings = options or merchant_settings["google_checkout"]
         self.merchant_id = google_checkout_settings['MERCHANT_ID']
         self.merchant_key = google_checkout_settings['MERCHANT_KEY']
         self._signature = None

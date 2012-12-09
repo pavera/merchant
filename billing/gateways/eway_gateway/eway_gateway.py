@@ -12,16 +12,15 @@ class EwayGateway(Gateway):
     homepage_url = "https://eway.com.au/"
     display_name = "eWay"
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, options=None, *args, **kwargs):
 
         self.test_mode = getattr(settings, 'MERCHANT_TEST_MODE', True)
         merchant_settings = getattr(settings, "MERCHANT_SETTINGS")
-        gw_settings = kwargs.pop('settings', None)
-        if not merchant_settings or not (merchant_settings.get("eway") or gw_settings):
+        if not merchant_settings or not (merchant_settings.get("eway") or options):
             raise GatewayNotConfigured("The '%s' gateway is not correctly "
                                        "configured." % self.display_name)
 
-        eway_settings = gw_settings or merchant_settings["eway"]
+        eway_settings = options or merchant_settings["eway"]
         if self.test_mode:
             customer_id = eway_settings['TEST_CUSTOMER_ID']
         else:

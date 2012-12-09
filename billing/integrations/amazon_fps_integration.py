@@ -39,10 +39,10 @@ class AmazonFpsIntegration(Integration):
             options = {}
         merchant_settings = getattr(settings, "MERCHANT_SETTINGS")
         integration_settings = kwargs.pop('settings', None)
-        if not merchant_settings or not (merchant_settings.get("amazon_fps") or integration_settings):
+        if not merchant_settings or not (merchant_settings.get("amazon_fps") or options):
             raise IntegrationNotConfigured("The '%s' integration is not correctly "
                                        "configured." % self.display_name)
-        amazon_fps_settings = integration_settings or merchant_settings["amazon_fps"]
+        amazon_fps_settings = options or merchant_settings["amazon_fps"]
         self.aws_access_key = options.get("aws_access_key", None) or amazon_fps_settings['AWS_ACCESS_KEY']
         self.aws_secret_access_key = options.get("aws_secret_access_key", None) or amazon_fps_settings['AWS_SECRET_ACCESS_KEY']
         super(AmazonFpsIntegration, self).__init__(options=options)
