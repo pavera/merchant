@@ -2,6 +2,7 @@ import datetime
 
 from paypal.pro.helpers import PayPalWPP
 from paypal.pro.exceptions import PayPalFailure
+from paypal.interface import PayPalInterface
 
 from django.conf import settings
 
@@ -23,6 +24,7 @@ class PayPalGateway(Gateway):
             raise GatewayNotConfigured("The '%s' gateway is not correctly "
                                        "configured." % self.display_name)
         pay_pal_settings = options or merchant_settings["pay_pal"]
+        self.paypal = PayPalInterface(**pay_pal_settings)
 
     @property
     def service_url(self):
@@ -76,9 +78,10 @@ class PayPalGateway(Gateway):
             params['shiptozip'] = shipping_address["zip"]
             params['shiptophonenum'] = shipping_address.get("phone", "")
 
-        wpp = PayPalWPP(options['request'])
+        #wpp = PayPalWPP(options['request'])
         try:
-            response = wpp.doDirectPayment(params)
+            response = self.paypal.do_direct_payment(**params)
+            #response = wpp.doDirectPayment(params)
             transaction_was_successful.send(sender=self,
                                             type="purchase",
                                             response=response)
@@ -116,7 +119,7 @@ class PayPalGateway(Gateway):
         params['billingperiod'] = options.get('billingperiod') or 'Month'
         params['billingfrequency'] = options.get('billingfrequency') or '1'
         params['amt'] = money
-        params['desc'] = 'description of the billing'
+        params['desc'] = options.get('description', None) or 'description of the billing'
 
         params['creditcardtype'] = creditcard.card_type.card_name
         params['acct'] = creditcard.number
@@ -124,9 +127,9 @@ class PayPalGateway(Gateway):
         params['firstname'] = creditcard.first_name
         params['lastname'] = creditcard.last_name
 
-        wpp = PayPalWPP(options.get('request', {}))
+        #wpp = PayPalWPP(options.get('request', {}))
         try:
-            response = wpp.createRecurringPaymentsProfile(params, direct=True)
+            response = self.paypal.create_recurring_payments_profile(**params)
             transaction_was_successful.send(sender=self,
                                             type="purchase",
                                             response=response)
