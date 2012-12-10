@@ -7,7 +7,7 @@ from paypal.interface import PayPalInterface
 from django.conf import settings
 
 from billing import Gateway, GatewayNotConfigured
-from billing.utils.credit_card import Visa, MasterCard, AmericanExpress, Discover
+from billing.utils.credit_card import Visa, MasterCard, AmericanExpress, Discover, InvalidCard
 from billing.signals import *
 
 
