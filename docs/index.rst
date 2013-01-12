@@ -28,6 +28,7 @@ Contents:
     * :doc:`WePay  <gateways/we_pay_gateway>`
     * :doc:`Beanstream  <gateways/beanstream_gateway>`
     * :doc:`Chargebee  <gateways/chargebee_gateway>`
+    * :doc:`Bitcoin <gateways/bitcoin_gateway>`
 
   * :doc:`Off-site Processing <offsite_processing>`
 
