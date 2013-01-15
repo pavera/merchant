@@ -58,7 +58,7 @@ class APTGateway(Gateway):
                 response=r)
         return {"status": status, "response": r}
 
-    def _header_data(self, transaction_type):
+    def _header_data(self):
         post = dict()
 
         post['SpecVersion'] = API_VERSION
@@ -79,42 +79,81 @@ class APTGateway(Gateway):
 
     def purchase(self, money, credit_card, options=None):
         """One go authorize and capture transaction"""
-        data = self._header_data('purchase')
-        self._req
+        data = self._header_data()
+        data['CustomerPresent'] = "FALSE"
+        data['CardPresent'] = "FALSE"
+        data['Amount'] = money
+        data['ECI'] = 7
+        if options and options.get('alias', None):
+            data['Alias'] = options.get('alias')
+        else:
+            data['AcctNum'] = credit_card.number
+            data['ExpDate'] = credit_card.expire_date_mmyy
+
+        if options:
+            if options.get('cvv2', None):
+                data['CardCode'] = options.get('cvv2')
+
+        return self._request(data, 'purchase')
+
     def authorize(self, money, credit_card, options=None):
         """Authorization for a future capture transaction"""
-        data = self._header_data('authorize')
+        data = self._header_data()
+        data['CustomerPresent'] = "FALSE"
+        data['CardPresent'] = "FALSE"
+        data['Amount'] = money
+        data['ECI'] = 7
+        if options and options.get('alias', None):
+            data['Alias'] = options.get('alias')
+        else:
+            data['AcctNum'] = credit_card.number
+            data['ExpDate'] = credit_card.expire_date_mmyy
+
+        if options:
+            if options.get('cvv2', None):
+                data['CardCode'] = options.get('cvv2')
+
+        return self._request(data, 'authorize')
 
     def capture(self, money, authorization, options=None):
         """Capture funds from a previously authorized transaction"""
-        data = self._header_data('capture')
+        data = self._header_data()
         data['TransactionID'] = authorization
 
     def void(self, identification, options=None):
         """Null/Blank/Delete a previous transaction"""
-        data = self._header_data('void')
+        data = self._header_data()
         data['TransactionID'] = identification
 
     def credit(self, money, identification, options=None):
         """Refund a previously 'settled' transaction"""
-        data = self._header_data('credit')
+        data = self._header_data()
         data['TransactionID'] = identification
 
-    def recurring(self, money, creditcard, options=None):
+    def recurring(self, money, credit_card, options=None):
         """Setup a recurring transaction"""
-        data = self._header_data('recurring')
+        data = self._header_data()
 
     def cancel_recurring(self, identification, options=None):
-        data = self._header_data('RecurringCancelTransaction')
+        data = self._header_data()
         data['RecurringPlanID'] = identification
 
-    def store(self, creditcard, options=None):
+    def store(self, credit_card, options=None):
         """Store the credit card and user profile information
         on the gateway for future use"""
-        data = self._header_data('store')
+        data = self._header_data()
+        data['AcctNum'] = credit_card.number
+        data['ExpDate'] = credit_card.expire_date_mmyy
+
+        if options:
+            if options.get('cvv2', None):
+                data['CardCode'] = options.get('cvv2')
+
+        return self._request(data, 'store')
 
     def unstore(self, identification, options=None):
         """Delete the previously stored credit card and user
         profile information on the gateway"""
-        data = self._header_data('unstore')
+        data = self._header_data()
         data['Alias'] = identification
+        return self._request(data, 'unstore')

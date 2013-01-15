@@ -60,6 +60,10 @@ class CreditCard(object):
         return '%02d-%04d' % (self.month, self.year)
 
     @property
+    def expire_date_mmyy(self):
+        return datetime.date(self.year, self.month, 1).strftime('%m%y')
+
+    @property
     def name(self):
         """Concat first name and last name of the card holder"""
         return '%s %s' % (self.first_name, self.last_name)
