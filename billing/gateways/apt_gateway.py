@@ -40,8 +40,9 @@ class APTGateway(Gateway):
                                        "configured." % self.display_name)
 
         apt_settings = options or merchant_settings["apt"]
-        self.login = apt_settings["LOGIN_ID"]
-        self.password = apt_settings["TRANSACTION_KEY"]
+        self.login = apt_settings["MERCHANT_ID"]
+        self.password = apt_settings["AUTH_KEY"]
+        self.terminal_id = apt_settings['TERMINAL_ID']
 
     def _request(self, data, transaction_type):
         data['TransactionType'] = TRANS_TYPES[transaction_type]
@@ -64,6 +65,7 @@ class APTGateway(Gateway):
         post['SpecVersion'] = API_VERSION
         post['XWebID'] = self.login
         post['AuthKey'] = self.password
+        post['TerminalID'] = self.terminal_id
         post['Industry'] = "ECOMMERCE"
         post['TrackCapabilities'] = "NONE"
         post['PinCapabilities'] = "FALSE"
