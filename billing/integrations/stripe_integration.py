@@ -10,7 +10,7 @@ class StripeIntegration(Integration):
     def __init__(self, options=None, *args, **kwargs):
         super(StripeIntegration, self).__init__()
         merchant_settings = getattr(settings, "MERCHANT_SETTINGS")
-        if not merchant_settings or not (merchant_settings.get("stripe") or options):
+        if not merchant_settings and not (merchant_settings.get("stripe") or options):
             raise IntegrationNotConfigured("The '%s' integration is not correctly "
                                        "configured." % self.display_name)
         stripe_settings = options or merchant_settings["stripe"]

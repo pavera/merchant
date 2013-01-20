@@ -21,7 +21,7 @@ class BraintreePaymentsGateway(Gateway):
         else:
             env = braintree.Environment.Production
         merchant_settings = getattr(settings, "MERCHANT_SETTINGS")
-        if not merchant_settings or not (merchant_settings.get("braintree_payments") or options):
+        if not merchant_settings and not (merchant_settings.get("braintree_payments") or options):
             raise GatewayNotConfigured("The '%s' gateway is not correctly "
                                        "configured." % self.display_name)
         braintree_settings = options or merchant_settings['braintree_payments']

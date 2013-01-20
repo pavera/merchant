@@ -27,7 +27,7 @@ class PaylaneGateway(Gateway):
 
     def __init__(self, options=None, *args, **kwargs):
         merchant_settings = getattr(settings, "MERCHANT_SETTINGS")
-        if not merchant_settings or not (merchant_settings.get("paylane") or options):
+        if not merchant_settings and not (merchant_settings.get("paylane") or options):
             raise GatewayNotConfigured("The '%s' gateway is not correctly "
                                        "configured." % self.display_name)
         paylane_settings = options or merchant_settings["paylane"]

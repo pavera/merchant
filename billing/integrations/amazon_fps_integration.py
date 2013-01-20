@@ -39,7 +39,7 @@ class AmazonFpsIntegration(Integration):
             options = {}
         merchant_settings = getattr(settings, "MERCHANT_SETTINGS")
         integration_settings = kwargs.pop('settings', None)
-        if not merchant_settings or not (merchant_settings.get("amazon_fps") or options):
+        if not merchant_settings and not (merchant_settings.get("amazon_fps") or options):
             raise IntegrationNotConfigured("The '%s' integration is not correctly "
                                        "configured." % self.display_name)
         amazon_fps_settings = options or merchant_settings["amazon_fps"]

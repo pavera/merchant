@@ -21,13 +21,13 @@ class CreditCard(object):
     # the card type also with the requests.
     card_name = None
 
-    def __init__(self, **kwargs):
-        self.first_name = kwargs["first_name"]
-        self.last_name = kwargs["last_name"]
-        self.month = int(kwargs["month"])
-        self.year = int(kwargs["year"])
-        self.number = kwargs["number"]
-        self.verification_value = kwargs["verification_value"]
+    def __init__(self, first_name=None, last_name=None, month=None, year=None, number=None, cvv2=None, **kwargs):
+        self.first_name = first_name
+        self.last_name = last_name
+        self.month = int(month)
+        self.year = int(year)
+        self.number = number
+        self.verification_value = cvv2
 
     def is_luhn_valid(self):
         """Checks the validity of card number by using Luhn Algorithm.

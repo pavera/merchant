@@ -13,7 +13,7 @@ class ChargebeeGateway(Gateway):
     def __init__(self, options=None, *args, **kwargs):
         test_mode = getattr(settings, "MERCHANT_TEST_MODE", True)
         merchant_settings = getattr(settings, "MERCHANT_SETTINGS")
-        if not merchant_settings or not (merchant_settings.get("chargebee") or options):
+        if not merchant_settings and not (merchant_settings.get("chargebee") or options):
             raise GatewayNotConfigured("The '%s' gateway is not correctly "
                                        "configured." % self.display_name)
         chargebee_settings = options or merchant_settings["chargebee"]

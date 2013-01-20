@@ -12,7 +12,7 @@ class PayPalIntegration(Integration):
 
     def __init__(self, options=None, *args, **kwargs):
         merchant_settings = getattr(settings, "MERCHANT_SETTINGS")
-        if not merchant_settings or not (merchant_settings.get("pay_pal") or options):
+        if not merchant_settings and not (merchant_settings.get("pay_pal") or options):
             raise IntegrationNotConfigured("The '%s' integration is not correctly "
                                        "configured." % self.display_name)
 

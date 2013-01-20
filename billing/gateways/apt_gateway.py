@@ -22,7 +22,7 @@ TRANS_TYPES = {
     'recurring': 'RecurringCreateTransaction',
 }
 
-class APTGateway(Gateway):
+class AptGateway(Gateway):
     test_url = 'https://test.t3secure.net/x-chargeweb.dll'
     prod_url = 'https://gw.t3secure.net/x-chargeweb.dll'
 
@@ -34,8 +34,8 @@ class APTGateway(Gateway):
     display_name = "APT"
 
     def __init__(self, options=None, *args, **kwargs):
-        merchant_settings = getattr(settings, "MERCHANT_SETTINGS")
-        if not merchant_settings or not (merchant_settings.get("apt") or options):
+        merchant_settings = getattr(settings, "MERCHANT_SETTINGS", None)
+        if not merchant_settings and not (merchant_settings.get("apt") or options):
             raise GatewayNotConfigured("The '%s' gateway is not correctly "
                                        "configured." % self.display_name)
 
@@ -48,7 +48,8 @@ class APTGateway(Gateway):
         data['TransactionType'] = TRANS_TYPES[transaction_type]
         r = requests.get(self.service_url, params=data)
         status = "SUCCESS"
-        if r.response_code != 1:
+        print r.content
+        if r.status_code != 200:
             status = "FAILURE"
             transaction_was_unsuccessful.send(sender=self,
                 type=transaction_type,
@@ -126,11 +127,13 @@ class APTGateway(Gateway):
         """Null/Blank/Delete a previous transaction"""
         data = self._header_data()
         data['TransactionID'] = identification
+        return self._request(data, 'void')
 
     def credit(self, money, identification, options=None):
         """Refund a previously 'settled' transaction"""
         data = self._header_data()
         data['TransactionID'] = identification
+
 
     def recurring(self, money, credit_card, options=None):
         """Setup a recurring transaction"""

@@ -74,7 +74,7 @@ class AuthorizeNetGateway(Gateway):
 
     def __init__(self, options=None, *args, **kwargs):
         merchant_settings = getattr(settings, "MERCHANT_SETTINGS")
-        if not merchant_settings or not (merchant_settings.get("authorize_net") or options):
+        if not merchant_settings and not (merchant_settings.get("authorize_net") or options):
             raise GatewayNotConfigured("The '%s' gateway is not correctly "
                                        "configured." % self.display_name)
 

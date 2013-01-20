@@ -20,7 +20,7 @@ class BraintreePaymentsIntegration(Integration):
         super(BraintreePaymentsIntegration, self).__init__(options=options)
 
         merchant_settings = getattr(settings, "MERCHANT_SETTINGS")
-        if not merchant_settings or not (merchant_settings.get("braintree_payments") or options):
+        if not merchant_settings and not (merchant_settings.get("braintree_payments") or options):
             raise IntegrationNotConfigured("The '%s' integration is not correctly "
                                        "configured." % self.display_name)
         braintree_payments_settings = options or merchant_settings["braintree_payments"]

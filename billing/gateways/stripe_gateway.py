@@ -15,7 +15,7 @@ class StripeGateway(Gateway):
 
     def __init__(self, options=None, *args, **kwargs):
         merchant_settings = getattr(settings, "MERCHANT_SETTINGS")
-        if not merchant_settings or not (merchant_settings.get("stripe") or options):
+        if not merchant_settings and not (merchant_settings.get("stripe") or options):
             raise GatewayNotConfigured("The '%s' gateway is not correctly "
                                        "configured." % self.display_name)
         stripe_settings = options or merchant_settings["stripe"]

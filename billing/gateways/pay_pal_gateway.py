@@ -20,7 +20,7 @@ class PayPalGateway(Gateway):
 
     def __init__(self, options=None, *args, **kwargs):
         merchant_settings = getattr(settings, "MERCHANT_SETTINGS")
-        if not merchant_settings or not (merchant_settings.get("pay_pal") or options):
+        if not merchant_settings and not (merchant_settings.get("pay_pal") or options):
             raise GatewayNotConfigured("The '%s' gateway is not correctly "
                                        "configured." % self.display_name)
         pay_pal_settings = options or merchant_settings["pay_pal"]

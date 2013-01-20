@@ -24,7 +24,7 @@ class AuthorizeNetDpmIntegration(Integration):
     def __init__(self, options=None, *args, **kwargs):
         super(AuthorizeNetDpmIntegration, self).__init__()
         merchant_settings = getattr(settings, "MERCHANT_SETTINGS")
-        if not merchant_settings or not (merchant_settings.get("authorize_net") or options):
+        if not merchant_settings and not (merchant_settings.get("authorize_net") or options):
             raise IntegrationNotConfigured("The '%s' integration is not correctly "
                                            "configured." % self.display_name)
         self.authorize_net_settings = options or merchant_settings["authorize_net"]
